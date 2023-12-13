@@ -1,4 +1,5 @@
 # Laba_1_Docker
+Задание:
 Выполняете оптимизацию образа за счет применения легковесного базового образа, уменьшения количества слоев и др.
 1.	Выберите базовый образ (Д)
 2.	Выполнить обновление apt-кеша (Д)
@@ -29,7 +30,7 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 25.	Выполните правильную постановку тега и загрузите ваш контейнер в docker hub. (Х)
 
 Результат работы: 
-![image](https://github.com/Daria-Krylova/Laba_1_Docker/assets/55152528/f654a29e-3777-4a49-8771-de5f7fdb8c51)
+
 
 <img width="1360" alt="web_cat" src="https://github.com/Daria-Krylova/Laba_1_Docker/assets/55152528/62d1e8db-b8e9-45e8-ae32-6d56c185e406">
 
