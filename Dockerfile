@@ -1,25 +1,27 @@
-# Выбираем стандартный базовый образ (можно еще обновить образ)
-FROM ubuntu:20.04
+# Выбираем Alpine Linux как базовый образ
+FROM alpine:latest
 
-# Объединяем команды для уменьшения количества слоев и очистки кэша
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install nginx -y --no-install-recommends && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Устанавливаем nginx
+RUN apk update && apk add nginx && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /run/nginx && \
+    mkdir -p /var/www/my_project/img
 
-# Копируем только необходимые файлы
+# Копируем файлы проекта
 COPY index.html /var/www/my_project/
 COPY img.jpg /var/www/my_project/img/
-COPY setup-nginx-config.sh /usr/local/bin/
 
-# Выполняем остальные настройки
-RUN mkdir -p /var/www/my_project/img && \
-    chmod -R 755 /var/www/my_project && \
-    useradd -m dariakrylova && \
-    groupadd dariakrylova_group && \
-    usermod -a -G dariakrylova_group dariakrylova && \
-    chown -R dariakrylova:dariakrylova_group /var/www/my_project && \
-    chmod +x /usr/local/bin/setup-nginx-config.sh && \
-    /usr/local/bin/setup-nginx-config.sh
+# Настраиваем конфигурацию nginx
+RUN sed -i 's/\/var\/www\/localhost\/htdocs/\/var\/www\/my_project/g' /etc/nginx/http.d/default.conf && \
+    nginx_user_file=$(grep -rl 'user .*;' /etc/nginx/) && \
+    sed -i 's/user .*;/user nginx;/g' "$nginx_user_file"
+
+# Задаем права доступа и пользователя
+RUN chmod -R 755 /var/www/my_project && \
+    adduser -D dariakrylova && \
+    addgroup dariakrylova_group && \
+    addgroup dariakrylova dariakrylova_group && \
+    chown -R dariakrylova:dariakrylova_group /var/www/my_project
 
 # Задаем команду запуска
 CMD ["nginx", "-g", "daemon off;"]
