@@ -1,4 +1,4 @@
-# Выбираем Alpine Linux как базовый образ
+# Выбираем Alpine Linux (более легковесный образ)
 FROM alpine:latest
 
 # Устанавливаем nginx
